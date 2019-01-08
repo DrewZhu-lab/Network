@@ -1,0 +1,20 @@
+Signals are intended to provide a rudimentary form of control over a process, not as an IPC mechanism. Signals have several issues when used as anything else:
+
+A lot of system calls will be interrupted by a signal and need special handling.
+
+Accordingly, a lot of code in the wild is not signal-safe.
+
+Signals do not have any kind of data content, except for themselves. This makes them mostly useless as a message passing method.
+
+There is only so much you can do in a signal handler.
+
+Most importantly, subsequent signals of the same type are not queued - they are merged into one instance.
+
+Even more important, there is no guarantee that signals are delivered in the same order as they were generated. From the manual page:
+
+By contrast, if multiple standard signals are pending for a process, the order in which they are delivered is unspecified.
+
+You might theoretically be able set up some kind of channel using several signals going back and forth, with some acting like some sort of acknowledgement, but no sane person would want to attempt something like that. Use signals as the method.
+
+
+This answer from stackoverflow: https://stackoverflow.com/questions/11133887/ipc-using-signals-on-linux
